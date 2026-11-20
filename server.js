@@ -2,6 +2,8 @@
 
 const fs = require('fs');
 const http = require('http');
+const https = require('https');
+const path = require('path');
 
 const cfg = require('./src/config');
 const auth = require('./src/auth');
@@ -10,17 +12,27 @@ const { createHandler } = require('./src/http');
 const { attachWs } = require('./src/ws');
 const { setLevel, logger, lanAddresses } = require('./src/util');
 
+function isHttps() {
+  try {
+    const dir = process.env.LIVE6BROWSER_CERT_DIR || path.join(cfg.dataDir, '..', 'certs');
+    return fs.existsSync(path.join(dir, 'cert.pem')) && fs.existsSync(path.join(dir, 'key.pem'));
+  } catch { return false; }
+}
+
+function scheme() { return isHttps() ? 'https' : 'http'; }
+
 function lanUrls() {
   const addrs = lanAddresses();
+  const s = scheme();
   const urls = { teacher: [], student: [], ips: [] };
   for (const a of addrs) {
     urls.ips.push(a.ip);
-    urls.teacher.push(`http://${a.ip}:${cfg.teacherPort}`);
-    urls.student.push(`http://${a.ip}:${cfg.teacherPort}`); // satu port untuk guru & siswa
+    urls.teacher.push(`${s}://${a.ip}:${cfg.teacherPort}`);
+    urls.student.push(`${s}://${a.ip}:${cfg.teacherPort}`); // satu port untuk guru & siswa
   }
   if (!urls.teacher.length) {
-    urls.teacher.push(`http://localhost:${cfg.teacherPort}`);
-    urls.student.push(`http://localhost:${cfg.teacherPort}`);
+    urls.teacher.push(`${s}://localhost:${cfg.teacherPort}`);
+    urls.student.push(`${s}://localhost:${cfg.teacherPort}`);
   }
   return urls;
 }
@@ -51,8 +63,17 @@ async function main() {
 
   const ctx = { cfg, rooms, auth, lanUrls: lanUrls() };
 
-  const server = http.createServer(createHandler(ctx, 'teacher'));
+  const httpsMode = isHttps();
+  const certDir = process.env.LIVE6BROWSER_CERT_DIR || path.join(cfg.dataDir, '..', 'certs');
+  const handler = createHandler(ctx, 'teacher');
+  const server = httpsMode
+    ? https.createServer({
+        key: fs.readFileSync(path.join(certDir, 'key.pem')),
+        cert: fs.readFileSync(path.join(certDir, 'cert.pem')),
+      }, handler)
+    : http.createServer(handler);
   attachWs(ctx, server);
+  if (httpsMode) logger.info(' HTTPS aktif (sertifikat self-signed di %s)', certDir);
 
   try {
     await listen(server, cfg.teacherPort, 'live6browser');
