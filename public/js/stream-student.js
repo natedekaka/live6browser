@@ -22,6 +22,7 @@ const StreamStudent = (function () {
   const liveText = u.$('#liveText');
   const streamMeta = u.$('#streamMeta');
   const btnZoom = u.$('#btnZoom');
+  const btnFullscreen = u.$('#btnFullscreen');
   const btnWake = u.$('#btnWake');
 
   function supportsBitmap() {
@@ -140,6 +141,43 @@ const StreamStudent = (function () {
     btnZoom.classList.toggle('active', on);
   }
 
+  /* --------------------------------------------------------- layar penuh */
+
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+  }
+
+  function toggleFullscreen() {
+    const target = stage;
+    if (isFullscreen()) {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if (document.msExitFullscreen) document.msExitFullscreen();
+    } else {
+      const req = target.requestFullscreen || target.webkitRequestFullscreen || target.msRequestFullscreen;
+      if (req) {
+        try { req.call(target); } catch (e) { u.toast('Layar penuh tidak didukung.', 'err'); }
+      } else {
+        // cadangan: mode zoom penuh (tanpa Fullscreen API)
+        stage.classList.add('zoomed');
+        btnZoom.textContent = 'Muat layar';
+        btnZoom.classList.add('active');
+        u.toast('Mode perbesar aktif (browser tidak mendukung fullscreen penuh).', 'err');
+      }
+    }
+  }
+
+  function onFullscreenChange() {
+    const on = isFullscreen();
+    btnFullscreen.textContent = on ? 'Keluar penuh' : 'Layar penuh';
+    btnFullscreen.classList.toggle('active', on);
+    stage.classList.toggle('is-fullscreen', on);
+    document.body.classList.toggle('is-fullscreen', on);
+  }
+  document.addEventListener('fullscreenchange', onFullscreenChange);
+  document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+  document.addEventListener('msfullscreenchange', onFullscreenChange);
+
   async function toggleWake() {
     if (!('wakeLock' in navigator)) return;
     try {
@@ -175,6 +213,7 @@ const StreamStudent = (function () {
     ensureCanvas();
 
     btnZoom.addEventListener('click', toggleZoom);
+    if (btnFullscreen) btnFullscreen.addEventListener('click', toggleFullscreen);
 
     const wakeSupported = 'wakeLock' in navigator && window.isSecureContext;
     btnWake.hidden = !wakeSupported;

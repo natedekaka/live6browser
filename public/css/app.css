@@ -835,3 +835,19 @@ body.app {
 .show-pw { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted, #9aa); margin: -4px 0 12px; cursor: pointer; }
 .auth-foot { display: flex; gap: 8px; justify-content: center; margin-top: 16px; font-size: 12px; }
 .muted { color: var(--muted, #9aa); }
+
+/* ============================================================ fullscreen (siswa) */
+.stage.is-fullscreen, .stage:fullscreen, .stage:-webkit-full-screen {
+  position: fixed; inset: 0; z-index: 9999; background: #000;
+  display: flex; align-items: center; justify-content: center;
+  width: 100vw; height: 100vh; margin: 0; padding: 0;
+}
+.stage.is-fullscreen #viewCanvas, .stage:fullscreen #viewCanvas, .stage:-webkit-full-screen #viewCanvas {
+  max-width: 100vw; max-height: 100vh; width: auto; height: auto;
+  object-fit: contain;
+}
+body.is-fullscreen .topbar, body.is-fullscreen .tabbar, body.is-fullscreen .stage-bar,
+body.is-fullscreen .controls { display: none !important; }
+
+body.app[data-role="teacher"] [data-only="student"],
+body.app[data-role="student"] [data-only="teacher"] { display: none !important; }

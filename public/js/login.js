@@ -132,5 +132,6 @@
       if (inp) inp.type = showPw.checked ? 'text' : 'password';
     });
   }
-  showPanel(role === 'student' ? 'student' : 'teacher');
+  const hasCode = params.has('code');
+  showPanel(hasCode ? 'student' : (role === 'student' ? 'student' : 'teacher'));
 })();
