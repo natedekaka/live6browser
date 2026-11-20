@@ -88,7 +88,7 @@ async function main() {
 
   logger.info('==========================================================');
   logger.info(' %s berjalan', cfg.title);
-  logger.info(' URL    : http://localhost:%d  (guru & siswa, satu port)', cfg.teacherPort);
+  logger.info(' URL    : %s://localhost:%d  (guru & siswa, satu port)', scheme(), cfg.teacherPort);
   for (const url of ctx.lanUrls.teacher) logger.info('          %s', url);
   logger.info(' Ruang awal: %s', cfg.defaultRoom || '(dibuat saat guru masuk)');
   logger.info(' Data     : %s', cfg.dataDir);
