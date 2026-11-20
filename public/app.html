@@ -24,8 +24,9 @@
 </header>
 
 <div class="banner" id="insecureBanner" hidden>
-  <span>Browser memblokir <b>Bagikan Browser</b> pada koneksi HTTP. Buka halaman guru lewat
-    <a id="localhostLink" href="http://localhost:9334">http://localhost:9334</a> (di laptop yang sama) — kode ruang sudah disiapkan.</span>
+  <span>Browser memblokir <b>Bagikan Browser</b> pada koneksi HTTP non-localhost.
+    <b>Solusi 1 (SSH tunnel):</b> di laptop jalankan <code>ssh -L 9334:localhost:9334 user@server</code>, lalu buka <a id="localhostLink" href="http://localhost:9334">http://localhost:9334</a>.
+    <b>Solusi 2:</b> akses server dengan HTTPS.</span>
   <button class="icon-btn" id="closeBanner" aria-label="Tutup">×</button>
 </div>
 
