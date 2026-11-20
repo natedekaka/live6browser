@@ -1,0 +1,16 @@
+{
+  "name": "live6browser",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "Live browser + papan tulis kelas untuk LAN",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "qrcode-generator": "^2.0.4",
+    "ws": "^8.23.0"
+  }
+}

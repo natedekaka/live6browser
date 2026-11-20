@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#f5f2e8">
+<meta name="color-scheme" content="light dark">
+<title>{{TITLE}} — Masuk</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="auth" data-role="{{ROLE}}" data-studentpw="{{STUDENT_PW}}" data-defaultroom="{{HAS_DEFAULT_ROOM}}">
+<main class="auth-card">
+  <div class="login-brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div>
+      <h1>{{TITLE}}</h1>
+      <p class="muted">Browser guru ditayangkan langsung ke HP siswa</p>
+    </div>
+  </div>
+
+  <div class="role-tabs" role="tablist" aria-label="Pilih peran">
+    <button class="role-tab" type="button" id="teacher-tab" aria-selected="true">Saya Guru</button>
+    <button class="role-tab" type="button" id="student-tab" aria-selected="false">Saya Siswa</button>
+  </div>
+
+  <!-- Guru -->
+  <section id="teacher-panel" class="login-panel">
+    <form id="formTeacher" autocomplete="off" novalidate>
+      <label class="field">
+        <span>Kata sandi guru</span>
+        <input type="text" name="password" required autofocus placeholder="rahasinate" autocomplete="current-password" value="rahasinate">
+      </label>
+      <p class="hint">Kata sandi sudah terisi otomatis. Klik <b>Buat ruang kelas</b> (atau ubah jika perlu).</p>
+      <p class="form-err" id="errTeacher" hidden></p>
+      <button class="btn primary block" type="submit">Buat ruang kelas</button>
+    </form>
+    <p class="hint">Kata sandi default: <code>rahasinate</code> (ubah via <code>.env</code>).</p>
+
+    <div id="teacher-result" hidden>
+      <p class="muted">Kode ruang kelas Anda (bagikan ke siswa):</p>
+      <div class="room-code" id="room-code-display"></div>
+      <div class="room-actions">
+        <button class="btn ghost" type="button" id="copy-code">Salin kode</button>
+        <button class="btn primary" type="button" id="enter-room">Masuk ke ruang</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Siswa -->
+  <section id="student-panel" class="login-panel" hidden>
+    <form id="formStudent" autocomplete="off" novalidate>
+      <label class="field">
+        <span>Kode ruang</span>
+        <input type="text" name="code" required placeholder="mis. K7M2QD" autocapitalize="characters" spellcheck="false" maxlength="32" autofocus>
+      </label>
+      <label class="field">
+        <span>Nama kamu</span>
+        <input type="text" name="name" required placeholder="Nama panggilan" maxlength="24">
+      </label>
+      <label class="field" data-need="pw">
+        <span>Kata sandi kelas</span>
+        <input type="password" name="password" placeholder="••••••••">
+      </label>
+      <p class="form-err" id="errStudent" hidden></p>
+      <button class="btn primary block" type="submit">Gabung</button>
+    </form>
+    <p class="hint">Minta kode ruang ke gurumu, lalu masukkan namamu.</p>
+  </section>
+
+  <footer class="auth-foot muted">
+    <span>Port <b>{{PORT}}</b></span>
+    <span class="dot">•</span>
+    <span>Di jaringan WiFi yang sama</span>
+  </footer>
+</main>
+<script src="/js/util.js"></script>
+<script src="/js/login.js"></script>
+</body>
+</html>
+EOF
+echo "written"
