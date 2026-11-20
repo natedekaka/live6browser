@@ -148,7 +148,7 @@ function createHandler(ctx, role) {
         if (!t.ok) return jsonError(res, 429, `Terlalu banyak percobaan. Coba lagi ${t.retryAfter} detik.`);
         if (!safeEqual(String(body.password ?? ''), cfg.teacherPassword)) {
           auth.recordFailure(`login:${ip}`);
-          return jsonError(res, 401, 'Kata sandi salah. Pastikan huruf kecil semua (rahasinate) dan Caps Lock tidak aktif.');
+          return jsonError(res, 401, 'Kata sandi salah. Pastikan Caps Lock tidak aktif.');
         }
         auth.recordSuccess(`login:${ip}`);
 
